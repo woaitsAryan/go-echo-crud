@@ -8,7 +8,6 @@ import (
 	"testing/helpers"
 	"testing/models"
 	"time"
-
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
@@ -65,7 +64,7 @@ func SignupHandler(c echo.Context) error {
 		"exp":    time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte("secret"))
+	tokenString, err := token.SignedString([]byte(helpers.JWT_KEY))
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
@@ -113,7 +112,7 @@ func LoginHandler(c echo.Context) error {
 		"exp":    time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte("secret"))
+	tokenString, err := token.SignedString([]byte(helpers.JWT_KEY))
 
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"time"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -14,7 +13,7 @@ var Usercollection *mongo.Collection
 var client *mongo.Client
 
 func ConnectToDB() {
-	connectionurl := "mongodb://localhost:27017"
+	connectionurl := MONGO_URL
 	clientOptions := options.Client().ApplyURI(connectionurl)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
