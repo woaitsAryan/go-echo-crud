@@ -1,0 +1,25 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "1323:1323"  
+    depends_on:
+      - mongo-db  
+
+  mongo-db:
+    image: mongo:latest 
+    container_name: mongo-container
+    ports:
+      - "27018:27018"
+    command: --port 27018
+    volumes:
+      - mongo-data:/data/db  
+
+volumes:
+  mongo-data:
+    name: mongo-data-forkthis
+    driver: local

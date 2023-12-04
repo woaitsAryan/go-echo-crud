@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing/auth"
-	"testing/helpers"
+	"github.com/woaitsAryan/portfolio-website/auth"
+	"github.com/woaitsAryan/portfolio-website/helpers"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
