@@ -2,18 +2,17 @@ package auth
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"net/http"
-	"github.com/woaitsAryan/portfolio-website/helpers"
-	"github.com/woaitsAryan/portfolio-website/models"
-	"time"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
+	"github.com/woaitsAryan/portfolio-website/helpers"
+	"github.com/woaitsAryan/portfolio-website/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"net/http"
+	"time"
 )
 
 func SignupHandler(c echo.Context) error {
@@ -37,7 +36,6 @@ func SignupHandler(c echo.Context) error {
 			"error": "User with this email already exists",
 		})
 	}
-	fmt.Println("Reached here")
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -48,6 +46,7 @@ func SignupHandler(c echo.Context) error {
 	newUser := bson.M{
 		"email":    user.Email,
 		"password": string(hashedPassword),
+		"data": "",
 	}
 
 	mongouser, err := helpers.Usercollection.InsertOne(context.Background(), newUser)
@@ -58,11 +57,13 @@ func SignupHandler(c echo.Context) error {
 		})
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userID": mongouser.InsertedID.(primitive.ObjectID).String(),
+	userClaim := jwt.MapClaims{
+		"userID": mongouser.InsertedID.(primitive.ObjectID).Hex(),
 		"iat":    time.Now().Unix(),
 		"exp":    time.Now().Add(time.Hour * 24 * 30).Unix(),
-	})
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, userClaim)
 
 	tokenString, err := token.SignedString([]byte(helpers.JWT_KEY))
 
@@ -107,7 +108,7 @@ func LoginHandler(c echo.Context) error {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userID": result["_id"].(primitive.ObjectID).String(),
+		"userID": result["_id"].(primitive.ObjectID).Hex(),
 		"iat":    time.Now().Unix(),
 		"exp":    time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
