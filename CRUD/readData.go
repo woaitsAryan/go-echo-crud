@@ -1,11 +1,11 @@
-package datafetch
+package CRUD
 
 import (
 	"net/http"
 	"github.com/labstack/echo/v4"
 )
 
-func GetData(c echo.Context) error {
+func ReadData(c echo.Context) error {
 	result := c.Get("result")
 	data, ok := result.(map[string]interface{})
 	if !ok {
