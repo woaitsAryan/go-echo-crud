@@ -28,6 +28,7 @@ cd go-echo-crud
 ```bash
 go run main.go
 ```
-4. API will be available at http://localhost:\<your specified port>
+
+4. API will be available at http://localhost:8080 or the port you specified in .env
    
 
